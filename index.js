@@ -4,8 +4,10 @@ const { TOKEN } = process.env;
 const fs = require('fs');
 const { execSync } = require('child_process');
 
-const approvalPrompts = fs.readFileSync('approvalPrompts.json').toJSON();
-const replies = fs.readFileSync('replies.json').toJSON();
+const approvalPrompts = JSON.parse(
+    fs.readFileSync('approvalPrompts.json')
+);
+const replies = JSON.parse(fs.readFileSync('replies.json'));
 
 const client = new Discord.Client({
     intents: new Discord.IntentsBitField().add([
