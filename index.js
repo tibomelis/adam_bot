@@ -2,26 +2,7 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const { TOKEN } = process.env;
 
-const approvalPrompts = [
-    'does adam approve?',
-    'does adam approve',
-
-    'does adam approve tho?',
-    'does adam approve tho',
-
-    'idk if adam approves',
-
-    'adam, do you approve?',
-    'adam, do you approve',
-
-    'adam do you approve?',
-    'adam do you approve',
-
-    'right adam?',
-    'right adam',
-
-    'is adam proud of',
-];
+const approvalPrompts = ['does adam', 'is adam', 'will adam'];
 
 const replies = [
     'Yes.',
@@ -55,9 +36,24 @@ client.on('ready', async () => {
 client.on('messageCreate', async (msg) => {
     if (msg.author.bot) return;
 
+    const message = msg.cleanContent.toLowerCase();
+
+    if (message.match(/adam .*restart.*/gi) != null) {
+        let bot_msg = await msg.reply('Restarting...');
+        fs.writeFileSync(
+            './storage/restart_info.json',
+            JSON.stringify({
+                msg_id: bot_msg.id,
+                channel_id: bot_msg.channel.id,
+            })
+        );
+        execSync('pm2 restart adam', {
+            windowsHide: true,
+        });
+    }
+
     if (
-        approvalPrompts.filter((x) => msg.cleanContent.match(x) != null)
-            .length > 0
+        approvalPrompts.filter((x) => message.match(x) != null).length > 0
     ) {
         msg.channel.send(
             replies[Math.floor(Math.random() * replies.length)]
@@ -65,7 +61,7 @@ client.on('messageCreate', async (msg) => {
         return;
     }
 
-    if (msg.cleanContent == 'adam?') {
+    if (message == 'adam?') {
         msg.channel.send('yeah?');
     }
 });
