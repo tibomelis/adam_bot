@@ -48,7 +48,7 @@ client.on('messageCreate', async (msg) => {
 
     const message = msg.cleanContent.toLowerCase();
 
-    if (message.match(/adam .*restart.*/gi) != null) {
+    if (message.match(/.*adam.*restart.*/gi) != null) {
         await msg.reply('Okay.');
 
         try {
@@ -63,7 +63,7 @@ client.on('messageCreate', async (msg) => {
         return;
     }
 
-    if (message.match(/adam .*update.*/gi) != null) {
+    if (message.match(/.*adam.*update.*/gi) != null) {
         const update_msg = await msg.reply('Okay.');
 
         try {
