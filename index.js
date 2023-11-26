@@ -19,6 +19,8 @@ const approvalPrompts = [
 
     'right adam?',
     'right adam',
+
+    'is adam proud of',
 ];
 
 const replies = [
@@ -28,6 +30,7 @@ const replies = [
 
     'I guess.',
     'Kinda.',
+    'Idk.',
     'Maybe.',
 
     'No.',
