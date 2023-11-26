@@ -49,25 +49,42 @@ client.on('messageCreate', async (msg) => {
     const message = msg.cleanContent.toLowerCase();
 
     if (message.match(/adam .*restart.*/gi) != null) {
-        let bot_msg = await msg.reply('Restarting...');
-        fs.writeFileSync(
-            './restart_info.json',
-            JSON.stringify({
-                msg_id: bot_msg.id,
-                channel_id: bot_msg.channel.id,
-            })
-        );
-        execSync('pm2 restart adam', {
-            windowsHide: true,
-        });
+        await msg.reply('Okay.');
+
+        try {
+            execSync('pm2 restart adam', {
+                windowsHide: true,
+            });
+        } catch (err) {
+            update_msg.reply(
+                'Uhm.. <@457897694426300418> i got a boo boo...'
+            );
+        }
+        return;
+    }
+
+    if (message.match(/adam .*update.*/gi) != null) {
+        const update_msg = await msg.reply('Okay.');
+
+        try {
+            execSync('git pull origin main|npm i', {
+                windowsHide: true,
+            });
+        } catch (err) {
+            update_msg.reply(
+                'Uhm.. <@457897694426300418> i got a boo boo...'
+            );
+        }
+        return;
     }
 
     if (
         approvalPrompts.filter((x) => message.match(x) != null).length > 0
     ) {
-        msg.channel.send(
-            replies[Math.floor(Math.random() * replies.length)]
-        );
+        msg.reply({
+            content: replies[Math.floor(Math.random() * replies.length)],
+            allowedMentions: { repliedUser: false },
+        });
         return;
     }
 
