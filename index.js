@@ -1,23 +1,12 @@
 require('dotenv').config();
 const Discord = require('discord.js');
 const { TOKEN } = process.env;
+const fs = require('fs');
+const { execSync } = require('child_process');
 
-const approvalPrompts = ['does adam', 'is adam', 'will adam'];
+const approvalPrompts = fs.readFileSync('approvalPrompts.json').toJSON();
+const replies = fs.readFileSync('replies.json').toJSON();
 
-const replies = [
-    'Yes.',
-    'I approve.',
-    'Sure.',
-
-    'I guess.',
-    'Kinda.',
-    'Idk.',
-    'Maybe.',
-
-    'No.',
-    'Nah.',
-    'Hell no...',
-];
 const client = new Discord.Client({
     intents: new Discord.IntentsBitField().add([
         Discord.GatewayIntentBits.GuildMessages,
@@ -31,6 +20,25 @@ client.on('ready', async () => {
     console.log(
         `Logged in as: ${client.user.tag} (id: ${client.user.id})`
     );
+
+    if (fs.existsSync('./storage/restart_info.json')) {
+        var restart_info = JSON.parse(
+            fs.readFileSync('./storage/restart_info.json').toString()
+        );
+        if (
+            restart_info.channel_id != undefined &&
+            restart_info.msg_id != undefined
+        ) {
+            var restart_msg_channel = await client.channels.fetch(
+                restart_info.channel_id
+            );
+            var restart_msg = await restart_msg_channel.messages.fetch(
+                restart_info.msg_id
+            );
+            restart_msg.edit('Restarted!');
+            fs.writeFileSync('./storage/restart_info.json', '{}');
+        }
+    }
 });
 
 client.on('messageCreate', async (msg) => {
@@ -41,7 +49,7 @@ client.on('messageCreate', async (msg) => {
     if (message.match(/adam .*restart.*/gi) != null) {
         let bot_msg = await msg.reply('Restarting...');
         fs.writeFileSync(
-            './storage/restart_info.json',
+            './restart_info.json',
             JSON.stringify({
                 msg_id: bot_msg.id,
                 channel_id: bot_msg.channel.id,
