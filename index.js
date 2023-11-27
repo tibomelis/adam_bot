@@ -103,7 +103,7 @@ client.on('messageCreate', async (msg) => {
         });
 
         try {
-            execSync('pm2 restart adam', {
+            exec('pm2 restart adam', {
                 windowsHide: true,
             });
         } catch (err) {
