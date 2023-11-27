@@ -62,11 +62,13 @@ client.on('messageCreate', async (msg) => {
     if (message.includes('🗿')) msg.react('🗿');
 
     // requested by Joery
-    if (message == 'adam?')
+    if (message == 'adam?') {
         msg.reply({
-            content: '<:adam:1178694014229282896>',
+            content: '<:adam:1178694511505977445>',
             allowedMentions: { repliedUser: false },
         });
+        return;
+    }
 
     // test
     if (message.match(/.*adam.*test.*/gi) != null) {
