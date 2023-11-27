@@ -33,7 +33,6 @@ client.on('ready', async () => {
             restart_info.channel_id != undefined &&
             restart_info.msg_id != undefined
         ) {
-            console.log('Hey');
             var restart_msg_channel = await client.channels.fetch(
                 restart_info.channel_id
             );
