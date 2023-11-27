@@ -46,34 +46,48 @@ client.on('ready', async () => {
 });
 
 client.on('messageCreate', async (msg) => {
+    // dont do stuff when the bot sends a message
     if (msg.author.bot) return;
 
+    // required ofcourse
     if (msg.cleanContent.includes('🗿')) msg.react('🗿');
 
+    // just for easy access.
     const message = msg.cleanContent.toLowerCase();
 
+    // manual count reset
     if (message.match(/.*adam.*reset.*count.*/gi) != null) {
-        msg.channel.send('okay okay fine...');
+        msg.reply({
+            content: 'okay okay fine...',
+            allowedMentions: { repliedUser: false },
+        });
         TiboMessageCounter = 0;
     }
 
+    // flooding counter/reset
     if (msg.author.id == '457897694426300418') {
         TiboMessageCounter++;
     } else {
         TiboMessageCounter = 0;
     }
 
+    // flooding warning
     if (TiboMessageCounter == 10) {
         msg.channel.send("Tibo.. you're flooding chat again..");
     }
+    // flooding update
     if (TiboMessageCounter > 10 && TiboMessageCounter % 2 == 0) {
         msg.channel.send(
             `Tibo. stop flooding. ||${TiboMessageCounter} messages.||`
         );
     }
 
+    // restart bot
     if (message.match(/.*adam.*restart.*/gi) != null) {
-        await msg.reply('Okay.');
+        const update_msg = await msg.reply({
+            content: 'Okay.',
+            allowedMentions: { repliedUser: false },
+        });
 
         try {
             execSync('pm2 restart adam', {
@@ -87,8 +101,12 @@ client.on('messageCreate', async (msg) => {
         return;
     }
 
+    // update bot
     if (message.match(/.*adam.*update.*/gi) != null) {
-        const update_msg = await msg.reply('Okay.');
+        const update_msg = await msg.reply({
+            content: 'Okay.',
+            allowedMentions: { repliedUser: false },
+        });
 
         try {
             execSync('git pull origin main|npm i', {
@@ -102,6 +120,7 @@ client.on('messageCreate', async (msg) => {
         return;
     }
 
+    // approval trigger
     if (
         approvalPrompts.filter((x) => message.match(x) != null).length > 0
     ) {
@@ -112,13 +131,17 @@ client.on('messageCreate', async (msg) => {
         return;
     }
 
-    if (message == 'adam?') {
-        msg.channel.send('yeah?');
+    // just to check if adam is online
+    if (message.match(/.*adam.*online.*/gi)) {
+        msg.reply({
+            content: 'yeah?',
+            allowedMentions: { repliedUser: false },
+        });
     }
 });
 
 client.on('guildCreate', async (guild) => {
-    var user = await client.users.fetch(ids.HEYITSTIBO);
+    var user = await client.users.fetch('457897694426300418');
     user.send(`Added to server \`${guild.name}\``);
 });
 
