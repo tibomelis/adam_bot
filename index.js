@@ -134,61 +134,56 @@ client.on('messageCreate', async (msg) => {
             allowedMentions: { repliedUser: false },
         });
 
-        try {
-            exec(
-                'git pull origin main|npm i',
-                {
-                    windowsHide: true,
-                },
-                (err, syncMsg, stderr) => {
-                    msg.channel.send('a');
-                    
-                    var changed = true;
+        exec(
+            'git pull origin main|npm i',
+            {
+                windowsHide: true,
+            },
+            (err, syncMsg, stderr) => {
+                msg.channel.send('a');
 
-                    if (err) {
-                        update_msg.edit(
-                            'Ran into an error when trying to update.'
-                        );
+                var changed = true;
 
-                        return;
-                    }
+                if (err) {
+                    update_msg.reply(
+                        'Uhm.. <@457897694426300418> i got a boo boo...'
+                    );
 
-                    if (syncMsg.includes('Already up to date.')) {
-                        update_msg.edit(
-                            'There were no changes.. But you can still restart with me if you want (adam restart)'
-                        );
-                        changed = false;
-                    }
-
-                    if (changed) {
-                        const commitMessage = execSync(
-                            'git log -1 --pretty=format:%B'
-                        ).toString();
-                        const commitAuthor = execSync(
-                            'git log -1 --pretty=format:%an'
-                        ).toString();
-
-                        update_msg.edit({
-                            content:
-                                'Updated:\n```' +
-                                syncMsg +
-                                '``` \n ```' +
-                                `${commitMessage} \n - ${commitAuthor}` +
-                                '```',
-                        });
-                    } else {
-                        update_msg.edit({
-                            content:
-                                'Console output: \n ```' + syncMsg + '```',
-                        });
-                    }
+                    return;
                 }
-            );
-        } catch (err) {
-            update_msg.reply(
-                'Uhm.. <@457897694426300418> i got a boo boo...'
-            );
-        }
+
+                if (syncMsg.includes('Already up to date.')) {
+                    update_msg.edit(
+                        'There were no changes.. But you can still restart with me if you want (adam restart)'
+                    );
+                    changed = false;
+                }
+
+                if (changed) {
+                    const commitMessage = execSync(
+                        'git log -1 --pretty=format:%B'
+                    ).toString();
+                    const commitAuthor = execSync(
+                        'git log -1 --pretty=format:%an'
+                    ).toString();
+
+                    update_msg.edit({
+                        content:
+                            'Updated:\n```' +
+                            syncMsg +
+                            '``` \n ```' +
+                            `${commitMessage} \n - ${commitAuthor}` +
+                            '```',
+                    });
+                } else {
+                    update_msg.edit({
+                        content:
+                            'Console output: \n ```' + syncMsg + '```',
+                    });
+                }
+            }
+        );
+
         return;
     }
 
