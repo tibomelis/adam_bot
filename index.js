@@ -55,11 +55,18 @@ client.on('messageCreate', async (msg) => {
     // dont do stuff when the bot sends a message
     if (msg.author.bot) return;
 
-    // required ofcourse
-    if (msg.cleanContent.includes('🗿')) msg.react('🗿');
-
     // just for easy access.
     const message = msg.cleanContent.toLowerCase();
+
+    // required ofcourse
+    if (message.includes('🗿')) msg.react('🗿');
+    // requested by Joery
+    if (message.includes('<:adam:1178694014229282896>'))
+        msg.reply({
+            content: '<:adam:1178694014229282896>',
+            allowedMentions: { repliedUser: false },
+        });
+
     // test
     if (message.match(/.*adam.*test.*/gi) != null) {
         msg.reply({
@@ -150,7 +157,7 @@ client.on('messageCreate', async (msg) => {
                     return;
                 }
 
-                if (syncMsg.includes('up to date.')) {
+                if (syncMsg.includes('Already up to date.')) {
                     update_msg.edit(
                         'There were no changes.. But you can still restart with me if you want (adam restart)'
                     );
