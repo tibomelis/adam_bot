@@ -50,6 +50,8 @@ client.on('messageCreate', async (msg) => {
 
     if (msg.author.id == '457897694426300418') {
         TiboMessageCounter++;
+    } else {
+        TiboMessageCounter = 0;
     }
 
     if (TiboMessageCounter > 10) {
