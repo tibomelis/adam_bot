@@ -54,9 +54,13 @@ client.on('messageCreate', async (msg) => {
         TiboMessageCounter = 0;
     }
 
-    if (TiboMessageCounter > 10) {
-        TiboMessageCounter = 0;
+    if (TiboMessageCounter == 10) {
         msg.channel.send("Tibo.. you're flooding chat again..");
+    }
+    if (TiboMessageCounter > 10 && TiboMessageCounter % 2 == 0) {
+        msg.channel.send(
+            `Tibo. stop flooding ||${TiboMessageCounter} messages||`
+        );
     }
 
     if (msg.cleanContent.includes('🗿')) msg.react('🗿');
