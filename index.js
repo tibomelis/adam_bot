@@ -36,10 +36,16 @@ client.on('ready', async () => {
             var restart_msg_channel = await client.channels.fetch(
                 restart_info.channel_id
             );
+            /** @type {Discord.Message} */
             var restart_msg = await restart_msg_channel.messages.fetch(
                 restart_info.msg_id
             );
-            restart_msg.edit('Restarted!');
+
+            restart_msg.edit({
+                content: 'Restarted!',
+                allowedMentions: { repliedUser: false },
+            });
+
             fs.writeFileSync('./restart_info.json', '{}');
         }
     }
@@ -101,6 +107,13 @@ client.on('messageCreate', async (msg) => {
             content: 'Okay. Restarting...',
             allowedMentions: { repliedUser: false },
         });
+        var channel_id = update_msg.channelId;
+        var msg_id = update_msg.id;
+
+        fs.writeFileSync(
+            './restart_info.json',
+            JSON.stringify({ channel_id, msg_id })
+        );
 
         try {
             exec('pm2 restart adam', {
