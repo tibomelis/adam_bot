@@ -4,6 +4,8 @@ const { TOKEN } = process.env;
 const fs = require('fs');
 const { execSync } = require('child_process');
 
+var TiboMessageCounter = 0;
+
 const approvalPrompts = JSON.parse(
     fs.readFileSync('approvalPrompts.json')
 );
@@ -45,6 +47,16 @@ client.on('ready', async () => {
 
 client.on('messageCreate', async (msg) => {
     if (msg.author.bot) return;
+
+    if (msg.author.id == '457897694426300418') {
+        TiboMessageCounter++;
+    }
+
+    if (TiboMessageCounter > 10) {
+        TiboMessageCounter = 0;
+        msg.channel.send("Tibo.. you're flooding chat again..");
+    }
+
     if (msg.cleanContent.includes('🗿')) msg.react('🗿');
 
     const message = msg.cleanContent.toLowerCase();
