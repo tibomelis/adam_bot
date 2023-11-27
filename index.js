@@ -25,14 +25,15 @@ client.on('ready', async () => {
         `Logged in as: ${client.user.tag} (id: ${client.user.id})`
     );
 
-    if (fs.existsSync('./storage/restart_info.json')) {
+    if (fs.existsSync('./restart_info.json')) {
         var restart_info = JSON.parse(
-            fs.readFileSync('./storage/restart_info.json').toString()
+            fs.readFileSync('./restart_info.json').toString()
         );
         if (
             restart_info.channel_id != undefined &&
             restart_info.msg_id != undefined
         ) {
+            console.log('Hey');
             var restart_msg_channel = await client.channels.fetch(
                 restart_info.channel_id
             );
@@ -40,7 +41,7 @@ client.on('ready', async () => {
                 restart_info.msg_id
             );
             restart_msg.edit('Restarted!');
-            fs.writeFileSync('./storage/restart_info.json', '{}');
+            fs.writeFileSync('./restart_info.json', '{}');
         }
     }
 });
