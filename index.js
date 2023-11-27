@@ -54,6 +54,19 @@ client.on('messageCreate', async (msg) => {
 
     // just for easy access.
     const message = msg.cleanContent.toLowerCase();
+    // test
+    if (message.match(/.*adam.*test.*/gi) != null) {
+        msg.reply({
+            content: 'Okay:',
+            allowedMentions: { repliedUser: false },
+        });
+
+        const update_this = await msg.channel.send(
+            '`this message should get updated in 1 second`'
+        );
+        await sleep();
+        update_this.edit('`did it work?`');
+    }
 
     // manual count reset
     if (message.match(/.*adam.*reset.*count.*/gi) != null) {
@@ -190,6 +203,10 @@ client.on('guildCreate', async (guild) => {
     var user = await client.users.fetch('457897694426300418');
     user.send(`Added to server \`${guild.name}\``);
 });
+
+async function sleep(t = 1) {
+    return new Promise((res) => setTimeout(() => res, t * 1000));
+}
 
 console.log('Connecting...');
 client.login(TOKEN);
