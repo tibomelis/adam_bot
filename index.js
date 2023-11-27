@@ -4,12 +4,14 @@ const { TOKEN } = process.env;
 const fs = require('fs');
 const { exec, execSync } = require('child_process');
 
+/** @type {number} */
 var TiboMessageCounter = 0;
 
-const approvalPrompts = JSON.parse(
-    fs.readFileSync('approvalPrompts.json')
-);
-const replies = JSON.parse(fs.readFileSync('replies.json'));
+/** @type {(string|RegExp)[]} */
+const approvalPrompts = require('./approvalPrompts');
+
+/** @type {(string)[]} */
+const replies = require('./replies');
 
 const client = new Discord.Client({
     intents: new Discord.IntentsBitField().add([
@@ -64,7 +66,7 @@ client.on('messageCreate', async (msg) => {
     // requested by Joery
     if (message == 'adam?') {
         const adamemoji = client.emojis.cache.get('1170472107742875688');
-        
+
         // console.log(adamemoji);
 
         msg.reply({
