@@ -48,6 +48,15 @@ client.on('ready', async () => {
 client.on('messageCreate', async (msg) => {
     if (msg.author.bot) return;
 
+    if (msg.cleanContent.includes('🗿')) msg.react('🗿');
+
+    const message = msg.cleanContent.toLowerCase();
+
+    if (message.match(/.*adam.*reset.*count.*/gi) != null) {
+        msg.channel.send('okay okay fine...');
+        TiboMessageCounter = 0;
+    }
+
     if (msg.author.id == '457897694426300418') {
         TiboMessageCounter++;
     } else {
@@ -59,13 +68,9 @@ client.on('messageCreate', async (msg) => {
     }
     if (TiboMessageCounter > 10 && TiboMessageCounter % 2 == 0) {
         msg.channel.send(
-            `Tibo. stop flooding ||${TiboMessageCounter} messages||`
+            `Tibo. stop flooding. ||${TiboMessageCounter} messages.||`
         );
     }
-
-    if (msg.cleanContent.includes('🗿')) msg.react('🗿');
-
-    const message = msg.cleanContent.toLowerCase();
 
     if (message.match(/.*adam.*restart.*/gi) != null) {
         await msg.reply('Okay.');
