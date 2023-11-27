@@ -140,8 +140,6 @@ client.on('messageCreate', async (msg) => {
                 windowsHide: true,
             },
             (err, syncMsg, stderr) => {
-                msg.channel.send('a');
-
                 var changed = true;
 
                 if (err) {
@@ -152,7 +150,7 @@ client.on('messageCreate', async (msg) => {
                     return;
                 }
 
-                if (syncMsg.includes('Already up to date.')) {
+                if (syncMsg.includes('up to date.')) {
                     update_msg.edit(
                         'There were no changes.. But you can still restart with me if you want (adam restart)'
                     );
@@ -172,7 +170,7 @@ client.on('messageCreate', async (msg) => {
                             'Updated:\n```' +
                             syncMsg +
                             '``` \n ```' +
-                            `${commitMessage} \n - ${commitAuthor}` +
+                            `${commitMessage.toString()} \n - ${commitAuthor.toString()}` +
                             '```',
                     });
                 } else {
