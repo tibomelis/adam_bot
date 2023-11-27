@@ -205,7 +205,7 @@ client.on('guildCreate', async (guild) => {
 });
 
 async function sleep(t = 1) {
-    return new Promise((res) => setTimeout(() => res, t * 1000));
+    return new Promise((res) => setTimeout(() => res(), t * 1000));
 }
 
 console.log('Connecting...');
