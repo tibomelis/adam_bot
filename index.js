@@ -160,10 +160,10 @@ client.on('messageCreate', async (msg) => {
                 }
 
                 if (changed) {
-                    const commitMessage = execSync(
+                    const commitMessage = exec(
                         'git log -1 --pretty=format:%B'
                     ).toString();
-                    const commitAuthor = execSync(
+                    const commitAuthor = exec(
                         'git log -1 --pretty=format:%an'
                     ).toString();
 
