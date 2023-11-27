@@ -45,6 +45,7 @@ client.on('ready', async () => {
 
 client.on('messageCreate', async (msg) => {
     if (msg.author.bot) return;
+    if (msg.cleanContent.includes('🗿')) msg.react('🗿');
 
     const message = msg.cleanContent.toLowerCase();
 
