@@ -17,7 +17,6 @@ const client = new Discord.Client({
         Discord.GatewayIntentBits.MessageContent,
         Discord.GatewayIntentBits.DirectMessages,
         Discord.GatewayIntentBits.Guilds,
-        Discord.GatewayIntentBits.GuildEmojisAndStickers,
     ]),
 });
 
@@ -65,7 +64,7 @@ client.on('messageCreate', async (msg) => {
     // requested by Joery
     if (message == 'adam?') {
         msg.reply({
-            content: '<:adam:1178694511505977445>',
+            content: '<:adam:1170472107742875688>',
             allowedMentions: { repliedUser: false },
         });
         return;
