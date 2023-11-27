@@ -141,22 +141,22 @@ client.on('messageCreate', async (msg) => {
                     windowsHide: true,
                 },
                 (err, syncMsg, stderr) => {
+                    msg.channel.send('a');
+                    
                     var changed = true;
 
                     if (err) {
-                        update_msg.edit({
-                            content:
-                                'Ran into an error when trying to update.',
-                        });
+                        update_msg.edit(
+                            'Ran into an error when trying to update.'
+                        );
 
                         return;
                     }
 
                     if (syncMsg.includes('Already up to date.')) {
-                        update_msg.edit({
-                            content:
-                                'There were no changes.. But you can still restart with me if you want (adam restart)',
-                        });
+                        update_msg.edit(
+                            'There were no changes.. But you can still restart with me if you want (adam restart)'
+                        );
                         changed = false;
                     }
 
