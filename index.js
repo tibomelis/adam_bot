@@ -2,7 +2,7 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const { TOKEN } = process.env;
 const fs = require('fs');
-const { execSync } = require('child_process');
+const { exec } = require('child_process');
 
 var TiboMessageCounter = 0;
 
@@ -85,7 +85,7 @@ client.on('messageCreate', async (msg) => {
     // restart bot
     if (message.match(/.*adam.*restart.*/gi) != null) {
         const update_msg = await msg.reply({
-            content: 'Okay.',
+            content: 'Okay. Restarting...',
             allowedMentions: { repliedUser: false },
         });
 
@@ -104,14 +104,60 @@ client.on('messageCreate', async (msg) => {
     // update bot
     if (message.match(/.*adam.*update.*/gi) != null) {
         const update_msg = await msg.reply({
-            content: 'Okay.',
+            content: 'Okay. Updating...',
             allowedMentions: { repliedUser: false },
         });
 
         try {
-            execSync('git pull origin main|npm i', {
-                windowsHide: true,
-            });
+            exec(
+                'git pull origin main|npm i',
+                {
+                    windowsHide: true,
+                },
+                (err, syncMsg, stderr) => {
+                    var changed = true;
+
+                    if (err) {
+                        update_msg.edit({
+                            content:
+                                'Ran into an error when trying to update.',
+                        });
+
+                        return;
+                    }
+
+                    if (syncMsg.includes('Already up to date.')) {
+                        update_msg.edit({
+                            content:
+                                'There were no changes.. But you can still restart with me if you want (adam restart)',
+                        });
+                        changed = false;
+                    }
+
+                    if (changed) {
+                        const commitMessage = execSync(
+                            'git log -1 --pretty=format:%B'
+                        ).toString();
+                        const commitAuthor = execSync(
+                            'git log -1 --pretty=format:%an'
+                        ).toString();
+
+                        update_msg.edit({
+                            content:
+                                'Updated:\n```' +
+                                syncMsg +
+                                '``` \n ```' +
+                                `${commitMessage} \n - ${commitAuthor}` +
+                                '```',
+                        });
+                    } else {
+                        update_msg.edit({
+                            content:
+                                'Console output: \n ```' + syncMsg + '```',
+                        });
+                    }
+                }
+            );
         } catch (err) {
             update_msg.reply(
                 'Uhm.. <@457897694426300418> i got a boo boo...'
