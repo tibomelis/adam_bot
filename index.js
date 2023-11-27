@@ -2,7 +2,7 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const { TOKEN } = process.env;
 const fs = require('fs');
-const { exec } = require('child_process');
+const { exec, execSync } = require('child_process');
 
 var TiboMessageCounter = 0;
 
@@ -158,10 +158,10 @@ client.on('messageCreate', async (msg) => {
                 }
 
                 if (changed) {
-                    const commitMessage = exec(
+                    const commitMessage = execSync(
                         'git log -1 --pretty=format:%B'
                     ).toString();
-                    const commitAuthor = exec(
+                    const commitAuthor = execSync(
                         'git log -1 --pretty=format:%an'
                     ).toString();
 
