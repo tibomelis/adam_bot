@@ -60,8 +60,9 @@ client.on('messageCreate', async (msg) => {
 
     // required ofcourse
     if (message.includes('🗿')) msg.react('🗿');
+
     // requested by Joery
-    if (message.includes('<:adam:1178694014229282896>'))
+    if (message == 'adam?')
         msg.reply({
             content: '<:adam:1178694014229282896>',
             allowedMentions: { repliedUser: false },
