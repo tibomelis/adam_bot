@@ -64,9 +64,11 @@ client.on('messageCreate', async (msg) => {
     // requested by Joery
     if (message == 'adam?') {
         const adamemoji = client.emojis.cache.get('1170472107742875688');
-        console.log(adamemoji);
+        
+        // console.log(adamemoji);
+
         msg.reply({
-            content: adamemoji,
+            content: `${adamemoji}`,
             allowedMentions: { repliedUser: false },
         });
         return;
