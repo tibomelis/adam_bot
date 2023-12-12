@@ -66,9 +66,6 @@ client.on('messageCreate', async (msg) => {
     // requested by Joery
     if (message == 'adam?') {
         const adamemoji = client.emojis.cache.get('1170472107742875688');
-
-        // console.log(adamemoji);
-
         msg.reply({
             content: `${adamemoji}`,
             allowedMentions: { repliedUser: false },
@@ -90,32 +87,40 @@ client.on('messageCreate', async (msg) => {
         update_this.edit('`did it work?`');
     }
 
+    // flooding warning
+    var channelCount = fs.existsSync('./channels.json')
+        ? JSON.parse(fs.readFileSync('./channels.json').toString())
+        : {};
+
+    // if channel count is not null OR the message was sent by tibo
+    if (!channelCount[msg.channelId]) channelCount[msg.channelId] = 0;
+
+    channelCount[msg.channelId] =
+        msg.author.id == '457897694426300418'
+            ? channelCount[msg.channelId] + 1
+            : 0;
+
     // manual count reset
     if (message.match(/.*adam.*reset.*count.*/gi) != null) {
         msg.reply({
             content: 'okay okay fine...',
             allowedMentions: { repliedUser: false },
         });
-        TiboMessageCounter = 0;
+        channelCount[msg.channelId] = 0;
     }
 
-    // flooding counter/reset
-    if (msg.author.id == '457897694426300418') {
-        TiboMessageCounter++;
-    } else {
-        TiboMessageCounter = 0;
-    }
-
-    // flooding warning
-    if (TiboMessageCounter == 10) {
+    if (channelCount[msg.channelId] == 10) {
         msg.channel.send("Tibo.. you're flooding chat again..");
     }
-    // flooding update
-    if (TiboMessageCounter > 10 && TiboMessageCounter % 2 == 0) {
+    if (
+        channelCount[msg.channelId] > 10 &&
+        channelCount[msg.channelId] % 3 == 0
+    ) {
         msg.channel.send(
-            `Tibo. stop flooding. ||${TiboMessageCounter} messages.||`
+            `Tibo. stop flooding. ||${channelCount} messages.||`
         );
     }
+    fs.writeFileSync('./channels.json', JSON.stringify(channelCount));
 
     // restart bot
     if (message.match(/.*adam.*restart.*/gi) != null) {
