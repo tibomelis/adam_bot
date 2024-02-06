@@ -110,7 +110,7 @@ client.on('messageCreate', async (msg) => {
 
     if (
         Date.now() - channelInfo[msg.channelId].lastAdamGifTimestamp >
-        300000
+        1800000
     ) {
         if (Math.random() > 0.9) {
             msg.channel.send(
