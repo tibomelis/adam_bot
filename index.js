@@ -110,16 +110,13 @@ client.on('messageCreate', async (msg) => {
 
     if (
         Date.now() - channelInfo[msg.channelId].lastAdamGifTimestamp >
-        5000
+        300000
     ) {
-        console.log('Allowed to send gif again');
-        if (Math.random() > 0.95) {
+        if (Math.random() > 0.9) {
             msg.channel.send(
                 'https://media.discordapp.net/attachments/1002256216224956538/1199445627986247730/ezgif.com-animated-gif-maker.gif'
             );
             channelInfo[msg.channelId].lastAdamGifTimestamp = Date.now();
-        } else {
-            console.log('Did not send gif');
         }
     }
     if (message.match(/.*adam.*reset.*count.*/gi) != null) {
