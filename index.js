@@ -86,41 +86,73 @@ client.on('messageCreate', async (msg) => {
         await sleep();
         update_this.edit('`did it work?`');
     }
-
+    if (message.match(/.*adam.*reset.*channels.*/gi) != null) {
+        fs.writeFileSync('./channels.json', '{}');
+        msg.channel.send('ok');
+    }
     // flooding warning
-    var channelCount = fs.existsSync('./channels.json')
+    var channelInfo = fs.existsSync('./channels.json')
         ? JSON.parse(fs.readFileSync('./channels.json').toString())
         : {};
 
     // if channel count is not null OR the message was sent by tibo
-    if (!channelCount[msg.channelId]) channelCount[msg.channelId] = 0;
+    if (!channelInfo[msg.channelId])
+        channelInfo[msg.channelId] = {
+            WarnTiboAboutFlooding: false,
+            TiboMessages: 0,
+            lastAdamGifTimestamp: Date.now(),
+        };
 
-    channelCount[msg.channelId] =
+    channelInfo[msg.channelId].TiboMessages =
         msg.author.id == '457897694426300418'
-            ? channelCount[msg.channelId] + 1
+            ? channelInfo[msg.channelId].TiboMessages + 1
             : 0;
 
-    // manual count reset
+    if (
+        Date.now() - channelInfo[msg.channelId].lastAdamGifTimestamp >
+        5000
+    ) {
+        console.log('Allowed to send gif again');
+        if (Math.random() > 0.95) {
+            msg.channel.send(
+                'https://media.discordapp.net/attachments/1002256216224956538/1199445627986247730/ezgif.com-animated-gif-maker.gif'
+            );
+            channelInfo[msg.channelId].lastAdamGifTimestamp = Date.now();
+        } else {
+            console.log('Did not send gif');
+        }
+    }
     if (message.match(/.*adam.*reset.*count.*/gi) != null) {
+        // manual count reset
         msg.reply({
             content: 'okay okay fine...',
             allowedMentions: { repliedUser: false },
         });
-        channelCount[msg.channelId] = 0;
+        channelInfo[msg.channelId] = 0;
     }
 
-    if (channelCount[msg.channelId] == 10) {
+    if (message.match(/.*adam.*allow.*spam.*/gi) != null) {
+        channelInfo[msg.channelId].WarnTiboAboutFlooding = false;
+        msg.channel.send('ok');
+    }
+    if (message.match(/.*adam.*dont allow.*spam.*/gi) != null) {
+        channelInfo[msg.channelId].WarnTiboAboutFlooding = true;
+        msg.channel.send('ok');
+    }
+
+    if (channelInfo[msg.channelId] == 10) {
         msg.channel.send("Tibo.. you're flooding chat again..");
     }
     if (
-        channelCount[msg.channelId] > 10 &&
-        channelCount[msg.channelId] % 3 == 0
+        channelInfo[msg.channelId].WarnTiboAboutFlooding &&
+        channelInfo[msg.channelId] > 10 &&
+        channelInfo[msg.channelId] % 3 == 0
     ) {
         msg.channel.send(
-            `Tibo. stop flooding. ||${channelCount} messages.||`
+            `Tibo. stop flooding. ||${channelInfo} messages.||`
         );
     }
-    fs.writeFileSync('./channels.json', JSON.stringify(channelCount));
+    fs.writeFileSync('./channels.json', JSON.stringify(channelInfo));
 
     // restart bot
     if (message.match(/.*adam.*restart.*/gi) != null) {
@@ -223,6 +255,18 @@ client.on('messageCreate', async (msg) => {
             content: 'yeah?',
             allowedMentions: { repliedUser: false },
         });
+    }
+
+    if (message.match(/.*adam.*translate.*/gi)) {
+        const translateThis = message.replace(
+            /.*adam.*translate(\s)?/gi,
+            ''
+        );
+        fetch(
+            `https://translate.google.com/translate_tts?ie=UTF-8&q=${translateThis}&tl=en&total=1&idx=0&textlen=4&client=tw-ob&prev=input&ttsspeed=1`
+        )
+            .then((r) => r.blob())
+            .then((x) => console.log(x));
     }
 });
 
