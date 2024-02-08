@@ -1,6 +1,6 @@
 require('dotenv').config();
 const Discord = require('discord.js');
-const { TOKEN } = process.env;
+const { TOKEN, TIBO_ID } = process.env;
 const fs = require('fs');
 const { exec, execSync } = require('child_process');
 
@@ -87,8 +87,12 @@ client.on('messageCreate', async (msg) => {
         update_this.edit('`did it work?`');
     }
     if (message.match(/.*adam.*reset.*channels.*/gi) != null) {
-        fs.writeFileSync('./channels.json', '{}');
-        msg.channel.send('ok');
+        if (msg.author.id == TIBO_ID) {
+            fs.writeFileSync('./channels.json', '{}');
+            msg.reply('ok');
+        } else {
+            msg.reply('Sorry, only Tibo can do that.');
+        }
     }
     // flooding warning
     var channelInfo = fs.existsSync('./channels.json')
@@ -104,7 +108,7 @@ client.on('messageCreate', async (msg) => {
         };
 
     channelInfo[msg.channelId].TiboMessages =
-        msg.author.id == '457897694426300418'
+        msg.author.id == TIBO_ID
             ? channelInfo[msg.channelId].TiboMessages + 1
             : 0;
 
