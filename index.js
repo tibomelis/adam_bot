@@ -112,7 +112,7 @@ client.on('messageCreate', async (msg) => {
         Date.now() - channelInfo[msg.channelId].lastAdamGifTimestamp >
         1800000
     ) {
-        if (Math.random() > 0.9) {
+        if (Math.random() > 0.99) {
             msg.channel.send(
                 'https://media.discordapp.net/attachments/1002256216224956538/1199445627986247730/ezgif.com-animated-gif-maker.gif'
             );
