@@ -123,14 +123,14 @@ client.on('messageCreate', async (msg) => {
             );
             channelInfo[msg.channelId].lastAdamGifTimestamp = Date.now();
         }
-    }
-
-    if (message.match(/.*adam.*show.*timestamp.*/gi) != null) {
+    } else {
         const lastTimestamp =
             channelInfo[msg.channelId].lastAdamGifTimestamp;
         const now = Date.now();
         const diff = now - lastTimestamp;
-        msg.reply(`last:${lastTimestamp};\nnow:${now};\ndiff:${diff};`);
+        msg.reply(
+            `SORRY FOR SPAM GUYS \nlast:${lastTimestamp};\nnow:${now};\ndiff:${diff};`
+        );
     }
 
     if (message.match(/.*adam.*reset.*count.*/gi) != null) {
