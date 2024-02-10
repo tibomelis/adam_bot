@@ -86,6 +86,7 @@ client.on('messageCreate', async (msg) => {
         await sleep();
         update_this.edit('`did it work?`');
     }
+
     if (message.match(/.*adam.*reset.*channels.*/gi) != null) {
         if (msg.author.id == TIBO_ID) {
             fs.writeFileSync('./channels.json', '{}');
@@ -116,13 +117,22 @@ client.on('messageCreate', async (msg) => {
         Date.now() - channelInfo[msg.channelId].lastAdamGifTimestamp >
         1800000
     ) {
-        if (Math.random() > 0.99) {
+        if (Math.random() > 0.999) {
             msg.channel.send(
                 'https://media.discordapp.net/attachments/1002256216224956538/1199445627986247730/ezgif.com-animated-gif-maker.gif'
             );
             channelInfo[msg.channelId].lastAdamGifTimestamp = Date.now();
         }
     }
+
+    if (message.match(/.*adam.*show.*timestamp.*/gi) != null) {
+        const lastTimestamp =
+            channelInfo[msg.channelId].lastAdamGifTimestamp;
+        const now = Date.now();
+        const diff = now - lastTimestamp;
+        msg.reply(`last:${lastTimestamp};\nnow:${now};\ndiff:${diff};`);
+    }
+
     if (message.match(/.*adam.*reset.*count.*/gi) != null) {
         // manual count reset
         msg.reply({
