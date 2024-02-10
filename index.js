@@ -123,7 +123,9 @@ client.on('messageCreate', async (msg) => {
             );
             channelInfo[msg.channelId].lastAdamGifTimestamp = Date.now();
         }
-    } else {
+    }
+
+    if (message.match(/.*adam.*show.*timestamp.*/gi) != null) {
         const lastTimestamp =
             channelInfo[msg.channelId].lastAdamGifTimestamp;
         const now = Date.now();
